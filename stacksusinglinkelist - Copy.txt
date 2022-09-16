@@ -1,0 +1,98 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node{
+    int data;
+    struct Node* next;
+};//user defined data type Node
+
+
+struct stack{
+   
+    int size;
+    int capacity;
+    struct Node* t;
+};
+
+void push(struct stack* s){
+    int ele;
+    printf("Enter element \n");
+    scanf("%d",&ele);
+    
+    if(s->size==s->capacity){
+         printf("STACK IS FULL \n");
+    }
+    else{
+        if(s->t==0){
+            struct Node* node=(struct Node*)malloc(sizeof(struct Node));
+            node->data=ele;
+            s->t=node;
+            s->size++;
+             printf("DATA PUSHED \n");
+           
+        }
+        
+        else{
+            struct Node* node=(struct Node*)malloc(sizeof(struct Node));
+            node->data=ele;
+            node->next=s->t->next;
+            s->t->next=node;
+            s->size++;
+            printf("DATA PUSHED \n");
+            
+        }
+        
+    }
+}
+
+
+int size1(struct stack* s){
+    return s->size;
+}
+
+
+int pop(struct stack* s){
+    if(s->t==0){
+        printf("Stack is empty \n");
+    }
+    
+    else{
+        struct Node* a=s->t;
+        s->t=s->t->next;
+        s->size--;
+        printf("Popped called \n");
+    }
+    
+}
+
+
+int top(struct stack* s){
+    if(s->t==0){
+        printf("Stack is empty \n");
+    }
+    
+    else{
+        return s->t->data;
+    }
+}
+
+int main(){
+    struct stack* st=(struct stack*)malloc(sizeof(struct stack));
+    int cap;
+    scanf("%d",&cap);
+    st->capacity=cap;
+    st->size=0;
+    st->t=0;
+    push(st);
+    push(st);
+    
+    printf("%d \n",size1(st));
+    pop(st);
+    printf("%d \n",size1(st));
+    
+    printf("%d \n",top(st));
+    pop(st);
+    pop(st);
+    
+   
+}
