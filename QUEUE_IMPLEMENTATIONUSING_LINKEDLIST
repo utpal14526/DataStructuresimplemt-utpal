@@ -1,0 +1,78 @@
+struct Node{
+    int data;
+    struct Node* next;
+    struct Node* prev;
+};
+
+struct queue{
+    struct Node* head;
+    struct Node* itr;
+};
+
+void push(struct queue* q,int x){
+   
+    if(q->head==NULL){
+       
+        struct Node* node=(struct Node*)malloc(sizeof(struct Node));
+        node->data=x;
+        q->head=node;
+        q->itr=node;
+    }
+    
+    else{
+        struct Node* node=(struct Node*)malloc(sizeof(struct Node));
+        node->data=x;
+        node->prev=q->itr;
+        q->itr->next=node;
+        q->itr=q->itr->next;
+   
+    }
+    
+}//push
+
+
+void top(struct queue* q){
+    if(q->head==NULL){
+        printf("EMPTY");
+    }
+    
+    else{
+        printf("%d",q->head->data);
+    }
+
+}
+
+
+void pop(struct queue* q){
+    if(q->head==NULL){
+        printf("THE QUEUE IS EMPTY");
+    }
+    
+    else{
+        q->head=q->head->next;
+    }
+    
+}
+
+
+
+int main(){
+    
+    struct queue* q=(struct queue*)malloc(sizeof(struct queue));
+  
+    q->head=NULL;
+    q->itr=NULL;
+    push(q,3);
+    push(q,2);
+    push(q,1);
+   
+    top(q);
+    pop(q);
+    top(q);
+    pop(q);
+    pop(q);
+    pop(q);
+    push(q,5);
+    top(q);
+    
+}
