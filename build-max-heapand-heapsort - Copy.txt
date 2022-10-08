@@ -1,0 +1,111 @@
+#include<iostream>
+using namespace std;
+
+
+
+void buildmaxheap(int arr[],int l){
+      int par=(l-1)/2;
+      for(int i=par;i>=0;i--){
+           
+            int idx=i;
+            while(idx<=l){
+               int child1=2*idx+1;
+               int child2=2*idx+2;
+
+               int ele=idx;
+               if(child1<=l && arr[child1]>arr[ele]){
+                   ele=child1;
+               }
+
+               if(child2<=l && arr[child2]>arr[ele]){
+                   ele=child2;
+               }
+            
+               if(ele==idx){
+                   break;
+               }
+
+               else{
+                   swap(arr[ele],arr[idx]);
+                   idx=ele;
+               }
+
+            }
+
+              //hepaify all indexes that are not leaf nodes from top-to-botoom.
+
+      }//fr ends 
+
+}
+
+
+void heapify(int arr[],int l){
+     
+     int idx=0;
+     while(idx<=l){
+        int child1=2*idx+1;
+        int child2=2*idx+2;
+        int ele=idx;
+
+        if(child1<=l && arr[child1]>arr[ele]){
+            ele=child1;
+        }
+
+        if(child2<=l && arr[child2]>arr[ele]){
+             ele=child2;
+        }
+
+        if(ele==idx){
+            break;
+        }
+  
+        else{
+             swap(arr[ele],arr[idx]);
+            idx=ele;
+        }
+        //update idx;
+     }
+
+
+}
+
+
+void heapsort(int arr[],int size){
+    //
+    int l=size;
+    for(int i=size;i>0;i--){
+        swap(arr[0],arr[i]);
+        heapify(arr,i-1);
+    }
+
+}
+
+
+
+int main(){
+    int arr[6]={3,5,9,1,2,4};
+    int size=6;
+
+    buildmaxheap(arr,size-1);
+
+    for(int i=0;i<size;i++){
+        cout<<arr[i]<<" ";
+    }
+
+    cout<<endl;
+
+    //after heapify build max-heap
+
+     //after heap sort...
+    heapsort(arr,size-1);
+
+    for(int i=0;i<size;i++){
+        cout<<arr[i]<<" ";
+    }
+
+
+  
+}
+
+
+101->5
