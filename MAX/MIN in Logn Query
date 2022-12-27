@@ -1,0 +1,75 @@
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+
+const int N=1e5+2;
+
+int arr[N],tree[4*N];
+
+//MAXIMUM IN A ARRAY
+
+void makesegmentTree(int node,int st,int en){
+
+   if(st==en){
+      tree[node]=arr[st];
+      return;
+   }
+
+   int mid=st+(en-st)/2;
+
+   makesegmentTree(2*node+1,st,mid);
+   makesegmentTree(2*node+2,mid+1,en);
+
+
+   tree[node]=max(tree[2*node+1],tree[2*node+2]);
+}
+
+int query(int st,int en,int l,int r,int node){
+    //no overlap
+    if(st>r || en<l){
+        return INT_MIN;
+    }
+   //range is completely overlapping
+    if(st>=l && en<=r){
+        return tree[node];   
+    }
+
+    //these two base case is difficult but visualize it   l   r  st  en return 0  st en  l r    0  l  st  en  r
+
+    int mid=st+(en-st)/2;
+
+    int a=query(st,mid,l,r,2*node+1);
+    int b=query(mid+1,en,l,r,2*node+2);
+
+   return max(a,b);
+
+}
+
+
+int main(){
+
+    //To fing the max in array or query in logn
+    int n;
+    cin>>n;
+
+    for(int i=0;i<n;i++){
+        cin>>arr[i];
+    }
+
+    makesegmentTree(0,0,n-1);
+    //now it comes to query
+
+    //we can have0<=l <r<n  
+    cout<<tree[0]<<endl;
+
+    int q;
+    cin>>q;
+    while(q--){
+        int l,r;
+        cin>>l>>r;
+        
+        cout<<query(0,n-1,l,r,0)<<endl;
+    }
+
+
+}
