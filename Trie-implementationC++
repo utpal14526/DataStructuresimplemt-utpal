@@ -1,0 +1,98 @@
+class Node{
+    public:
+        Node* arr[26];
+        bool  flag=false;
+       
+        bool check(char ch){
+            return (arr[ch-'a']==NULL);
+        }
+
+        void put(char ch,Node* newnode){
+            arr[ch-'a']=newnode;
+        }
+
+        void setEnd(){
+            flag=true;
+        }
+
+        Node* next(char ch){
+            return arr[ch-'a'];
+        }
+
+        bool checkEnd(){
+            return flag;
+        }
+};
+
+
+class Trie {
+public:
+    
+   
+    Node* root;
+ 
+    Trie() {
+        root=new Node();
+    }
+    
+    void insert(string word) {
+        Node* a=root;
+        
+        for(int i=0;i<word.size();i++){
+
+            if(a->check(word[i])==true){
+                Node* newNode=new Node();
+                a->put(word[i],newNode);
+            }
+
+            a=a->next(word[i]);
+        }
+
+        a->setEnd();   // node a ke liye ye function called hai
+    }
+    
+    // inserts into my trie data structure 
+    
+    bool search(string word) {
+
+        Node* a=root;
+
+        for(int i=0;i<word.size();i++){
+            if(a->check(word[i])==true){
+                return false;
+            }
+
+            a=a->next(word[i]);
+        }
+
+        return a->checkEnd();
+        
+    }
+    
+    // search full word in my trie data structure 
+    
+    bool startsWith(string prefix) {
+        Node* a=root;
+
+        for(int i=0;i<prefix.size();i++){
+            if(a->check(prefix[i])==true){
+                 return false;
+            }
+            
+            a=a->next(prefix[i]);
+        }
+
+        return true;
+
+    }
+    
+    // search prefix in my trie data structure...
+};
+
+/**
+ * Your Trie object will be instantiated and called as such:
+ * Trie* obj = new Trie();
+ * obj->insert(word);
+ * bool param_2 = obj->search(word);
+ * bool param_3 = obj->startsWith(prefix);
+ */
