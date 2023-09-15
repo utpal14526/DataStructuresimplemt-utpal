@@ -1,0 +1,73 @@
+class Solution {
+public:
+    int strStr(string haystack, string needle) {
+
+        int n=haystack.size();
+        int m=needle.size();
+        if(m>n){
+            return -1;
+        }
+
+        vector<int>lps(m,0);
+        int i=0;
+        int j=1;
+
+        while(j<m){
+            if(needle[j]==needle[i]){
+                lps[j]=1+i;
+                j++;i++;
+            }
+            else{
+                if(i==0){
+                     lps[j]=0;
+                     j++;
+                }
+                else{
+                    // make the pointer to the value of lps[i-1]
+                    int x=lps[i-1];
+                    i=x;
+                }
+            }
+        }
+
+        i=0;
+        j=0;
+
+        while(i<n && j<m){
+
+            if(haystack[i]==needle[j]){
+                i++;j++;
+            }
+            else{
+                if(j==0){
+                    i++;
+                }
+                else{
+                    j=lps[j-1];
+                }
+            }
+
+        }
+
+        if(j>=m){
+            return (i-m);
+        }
+
+
+        return -1;
+        
+    }
+};
+
+// while making lps array 
+// fix i=0 j=1  and if( same)lps[j]=i+1 i++;j++
+// else  i==0  lps[j]=0 j++;       i!=0  i=lps[i-1]
+
+// move the i backwards
+
+// so while mathchig 
+
+// a[i]==b[j]  i++ j++;
+// else j==0 i++;
+// else j!=0 j=lps[j-1]
+
