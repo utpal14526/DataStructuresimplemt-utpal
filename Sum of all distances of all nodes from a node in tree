@@ -1,0 +1,89 @@
+
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+
+// it's a tree rerooting dp problem 
+
+void dfs(ll node, ll par, vector<pair<ll, ll>> &dp, vector<ll> adj[])
+{
+
+    ll nodes = 0;
+    ll sum = 0;
+
+    for (auto it : adj[node])
+    {
+        if (it != par)
+        {
+            dfs(it, node, dp, adj);
+            nodes += dp[it].second;
+            sum += dp[it].first;
+        }
+    }
+
+    dp[node].second = nodes + 1;
+    dp[node].first = sum + (nodes);
+}
+
+void dfs2(ll node, ll par, vector<pair<ll, ll>> &dp, vector<ll> adj[], vector<ll> &ans, ll p, ll n)
+{
+
+    // i am at a node
+    ans[node] = dp[node].first + p + n; // ll the subtree par mujhe par se sarre nodes ki distance except in this subtree
+
+    ll tnodes = 0;
+    ll tsumsubtree = 0;
+    multiset<ll> s;
+
+    for (auto it : adj[node])
+    {
+        if (it != par)
+        {
+            tnodes += dp[it].second;
+            tsumsubtree += dp[it].first;
+        }
+    }
+
+    for (auto it : adj[node])
+    {
+        if (it != par)
+        {
+            ll tsum = dp[node].first;
+            ll k = dp[it].first + dp[it].second;
+            tsum -= k;
+
+            dfs2(it, node, dp, adj, ans, p + n + tsum, n + 1 + tnodes - dp[it].second);
+        }
+    }
+}
+
+int main()
+{
+    ll n;
+    cin >> n;
+
+    vector<ll> adj[n + 1];
+    for (ll i = 0; i < n - 1; i++)
+    {
+        ll a, b;
+        cin >> a >> b;
+        adj[a].push_back(b);
+        adj[b].push_back(a);
+    }
+
+    vector<pair<ll, ll>> dp(n + 1, {0, 0});
+    dfs(1, -1, dp, adj);
+    vector<ll> ans(n + 1, 0);
+
+    dfs2(1, -1, dp, adj, ans, 0, 0);
+
+    for (ll i = 1; i <= n; i++)
+        cout << ans[i] << " ";
+}
+
+// dp[i].second --> rooted at this how many nodes in subtree
+// dp[i].first --> sum of all the nodes dis from  this node in the subtree..
+
+//   1
+// 2    3
+//     4   5
