@@ -1,0 +1,68 @@
+
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+
+long long inf = 1e15;
+
+int main()
+{
+
+    ll n, m, q;
+    cin >> n >> m >> q;
+
+    ll dp[n][n];
+
+    for (ll i = 0; i < n; i++)
+    {
+        for (ll j = 0; j < n; j++)
+        {
+            if (i == j)
+                dp[i][j] = 0;
+            else
+                dp[i][j] = 1e15;
+        }
+    }
+
+    for (ll i = 0; i < m; i++)
+    {
+        ll a, b, c;
+        cin >> a >> b >> c;
+        a--;
+        b--;
+
+        dp[a][b] = min(dp[a][b], c);
+        dp[b][a] = min(dp[a][b], c);
+    }
+
+       for (ll k = 0; k < n; k++)
+    {
+        for (ll i = 0; i < n; i++)
+        {
+            for (ll j = 0; j < n; j++)
+            {
+
+                dp[i][j] = min(dp[i][j], dp[i][k] + dp[k][j]);
+            }
+        }
+    }
+
+    while (q--)
+    {
+
+        ll a, b;
+        cin >> a >> b;
+        a--;
+        b--;
+
+        if (dp[a][b] != 1e15)
+        {
+            cout << dp[a][b] << endl;
+        }
+
+        else
+            cout << -1 << endl;
+    }
+}
+
+// accepts a user input works for only undirected graph 
