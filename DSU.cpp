@@ -1,81 +1,47 @@
-#include <bits/stdc++.h>
-using namespace std;
 
-class DisjointSet
+class DisjollSet
 {
 
 public:
-    vector<int> size;
-    vector<int> parent;
+    vector<ll> size;
+    vector<ll> parent;
 
-    DisjointSet(int n)
+    DisjollSet(ll n)
     {
-        size.resize(n + 1, 0);
+        size.resize(n + 1, 1);
         parent.resize(n + 1, -1);
-        for (int i = 0; i <= n; i++)
+        for (ll i = 0; i <= n; i++)
             parent[i] = i;
     }
 
-    int findUltimateparent(int node)
+    ll findUltimateparent(ll node)
     {
         if (node == parent[node])
             return node;
         return parent[node] = findUltimateparent(parent[node]);
     }
 
-    void unionByRank(int u, int v)
+    void unionByRank(ll u, ll v)
     {
 
-        int upar = findUltimateparent(u);
-        int vpar = findUltimateparent(v);
+        ll upar = findUltimateparent(u);
+        ll vpar = findUltimateparent(v);
 
-        if (findUltimateparent(u) == findUltimateparent(v))
+        if (vpar != upar)
         {
-            return;
-        }
+            if (size[vpar] < size[upar])
+            {
+                swap(vpar, upar);
+            }
 
-        if (size[upar] == size[vpar])
-        {
-            parent[vpar] = upar;
-            size[upar]++;
-        }
-
-        else if (size[upar] < size[vpar])
-        {
+            // vpar chota upar bada
             parent[upar] = vpar;
-        }
-
-        else
-        {
-            parent[vpar] = upar;
+            size[vpar] += size[upar];
         }
     }
 
-    bool sameComponent(int u, int v)
+    bool sameComponent(ll u, ll v)
     {
         return findUltimateparent(u) == findUltimateparent(v);
     }
 };
-
-int main()
-{
-
-    DisjointSet d1(4);
-
-    // 1 2 3 4
-    d1.unionByRank(1, 2);
-    d1.unionByRank(3, 4);
-    // d1.unionByRank(4, 1);
-
-    if (d1.sameComponent(2, 3))
-    {
-        cout << "SAME";
-    }
-
-    
-
-}
-
-
-// what a dsu can do it can find whether two nodes belong to same compo or not based on some condition
-// ultimate parent is used u   v ka ultimate parent kya hai 
