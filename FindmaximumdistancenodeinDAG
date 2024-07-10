@@ -1,0 +1,30 @@
+void dpdfs(vector<ll> adj[], ll n, vector<ll> &dp, ll node)
+{
+
+    // you are on this node
+    dp[node] = 0;
+
+    for (auto it : adj[node])
+    {
+
+        if (dp[it] == -1)
+        {
+            dpdfs(adj, n, dp, it);
+        }
+
+        dp[node] = max(dp[node], 1 + dp[it]);
+    }
+}
+
+
+vector<ll> dp(n + 1, -1);
+    dp[0] = 0;
+
+    for (ll i = 1; i <= n; i++)
+    {
+
+        if (dp[i] == -1)
+        {
+            dpdfs(adj, n, dp, i);
+        }
+    }
