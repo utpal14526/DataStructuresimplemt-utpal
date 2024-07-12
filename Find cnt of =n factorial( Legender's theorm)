@@ -1,0 +1,90 @@
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+
+// motive is that
+
+//  given a number n you have to find no of it's divisors
+//  which you can easily do
+
+//   n -->  (p1)^a*(p2)^b*(p3)^c*(p4)^d
+//   no of divisors == (a+1)*(b+1)*(c+1)*(d+1)
+
+//   but now the question is that  you have to find the
+//   number of divisors of n! that is hard
+
+//   if i somehow found these primes powers that my work is done
+//   primes would be obv lesser <=n
+
+//  find primes [p1,p2,p3,p4,p5,....]
+
+//   for all these primes i want that what is the maximum power should share in your n!
+
+//   supoose     n=10
+
+//  p1 =2         1 2 3 4 5 6 7 8 9 10
+
+//   2 share  8 powers  2^8  how
+
+//   n/p1 + n/p1^2 + n/p1^3 + n/p1^4 ....  a prime p1 shares this much power
+
+//   you know all these powers and now you can easily find your divisors
+
+#include <bits/stdc++.h>
+using namespace std;
+typedef unsigned long long int ull;
+
+vector<ull> allPrimes;
+
+void sieve(int n)
+{
+
+    vector<bool> prime(n + 1, true);
+
+    // Loop to update prime[]
+    for (int p = 2; p * p <= n; p++)
+    {
+
+        if (prime[p] == true)
+        {
+
+            for (int i = p * 2; i <= n; i += p)
+                prime[i] = false;
+        }
+    }
+
+    for (int p = 2; p <= n; p++)
+        if (prime[p])
+            allPrimes.push_back(p);
+}
+
+ull factorialDivisors(ull n)
+{
+    sieve(n);
+    ull result = 1;
+
+    for (int i = 0; i < allPrimes.size(); i++)
+    {
+
+        ull p = allPrimes[i]; // prime p
+
+        ull exp = 0;
+        while (p <= n)
+        {
+            exp = exp + (n / p);
+            p = p * allPrimes[i];
+        }
+
+        result = result * (exp + 1);
+    }
+
+    return result;
+}
+
+int main()
+{
+
+    // n diya hai n! ke divisors count return krta hai 
+    cout << factorialDivisors(5);
+    return 0;
+}
