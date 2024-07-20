@@ -16,6 +16,55 @@ void dfs(vector<int> adj[], vector<int> &depth, int par, int node, int dep, vect
     }
 }
 
+int findLca(vector<vector<int>> &dp, vector<int> &depth, int u, int v)
+{
+
+        int a = v;
+    int b = u;
+    if (depth[u] > depth[v])
+    {
+        swap(u, v);
+    }
+
+    int k = depth[v] - depth[u];
+
+    int a1 = 0;
+
+    while (k > 0)
+    {
+
+        if (k % 2 == 1)
+            v = dp[v][a1];
+
+        a1++;
+        k /= 2;
+    }
+
+    for (int i = 21; i >= 0; i--)
+    {
+        if (dp[u][i] != dp[v][i])
+        {
+            v = dp[v][i];
+            u = dp[u][i];
+        }
+    }
+
+    int lca = v;
+    if (u != v)
+    {
+
+        if (v != 1)
+        {
+            lca = dp[v][0];
+        }
+    }
+
+    v = a;
+    u = b;
+
+    return lca;
+}
+
 int main()
 {
 
@@ -32,10 +81,8 @@ int main()
         adj[v].push_back(u);
     }
 
-    // make the dp
     vector<int> depth(n + 1, 0);
     vector<vector<int>> dp(n + 1, vector<int>(22, -1));
-
     dfs(adj, depth, -1, 1, 1, dp);
 
     for (int i = 1; i < 22; i++)
@@ -52,64 +99,12 @@ int main()
         }
     }
 
-    // now queries to answer things
-
     while (q--)
     {
 
         int u, v;
         cin >> u >> v;
 
-        int a = v;
-        int b = u;
-        if (depth[u] > depth[v])
-        {
-            swap(u, v); // v ka depth bada hai hamesa
-        }
-
-        int k = depth[v] - depth[u];
-
-        // k leveles upar lana hai
-
-        int a1 = 0;
-
-        while (k > 0)
-        {
-
-            if (k % 2 == 1)
-            {
-                //  cout << a << endl;
-                v = dp[v][a1];
-            }
-
-            a1++;
-            k /= 2;
-        }
-
-        for (int i = 21; i >= 0; i--)
-        {
-
-            if (dp[u][i] != dp[v][i])
-            {
-                v = dp[v][i];
-                u = dp[u][i];
-            }
-        }
-
-        int lca = v;
-
-        if (v != 1 && a != b)
-        {
-            lca = dp[v][0];
-        }
-
-        v = a;
-        u = b;
-
-        cout << depth[v] - depth[lca] + depth[u] - depth[lca] << endl;
+        cout << findLca(dp, depth, 2, 3);
     }
 }
-
-//       1
-//     2   3
-//        4  5
