@@ -49,8 +49,8 @@ int main()
 
     // we have your sorrted
 
-    int st = 0;
-    int en = -1;
+    int st = p[0].first.first   // start by first block bc 
+    int en = p[0].first.first;
 
     map<int, int> mpp;
 
