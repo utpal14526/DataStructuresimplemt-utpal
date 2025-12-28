@@ -1,0 +1,183 @@
+class Solution {
+public:
+     
+    // 3:30 
+    
+    const long long INF=1e17;
+    
+    void rebalance( multiset<long long>&p1,multiset<long long>&p2,long long &sum1,long long &sum2){
+        
+        if(p1.size()>p2.size()+1){
+            
+            auto it=p1.begin();
+            long long ele=-1*(*it);
+            p1.erase(it);
+            sum1=sum1-ele;
+            sum2=sum2+ele;
+            p2.insert(ele);
+        
+        }
+        else if(p2.size()>p1.size()+1){
+            
+            auto it=p2.begin();
+            long long ele=(*it);
+            p2.erase(it);
+            sum2=sum2-ele;
+            sum1=sum1+ele;
+            p1.insert(-ele);
+        }   
+    }
+    
+    void add( multiset<long long>&p1,multiset<long long>&p2,long long &sum1,long long &sum2,long long x){
+        
+        if(p1.size()==0 || x<=(-1*(*p1.begin()))){
+            p1.insert(-x);
+            sum1+=x;
+        }
+        else{
+            p2.insert(x);
+            sum2+=x;
+        }
+    
+        rebalance(p1,p2,sum1,sum2);
+    }
+           
+    void remove( multiset<long long>&p1,multiset<long long>&p2,long long &sum1,long long &sum2,long long x){
+        
+        
+        if(p2.find(x)!=p2.end()){
+            auto it=p2.find(x);
+            sum2-=x;
+            p2.erase(it); 
+            rebalance(p1,p2,sum1,sum2);
+        }
+        
+        else{
+        
+            auto it=p1.find(-x);
+            sum1-=x;
+            p1.erase(it);
+            rebalance(p1,p2,sum1,sum2);
+            
+            if(p1.size()==0 && p2.size()>=1){    // ye krne ka mtlb tha kyunki set2 mai jyada ho skta hai s1 se s1=0 s2=1 toh glt rhega s2 se s1 mai bhejdo
+                auto it=p2.begin();
+                int ele=(*it);
+                p2.erase(it);
+                sum2=sum2-ele;
+                sum1=sum1+ele;
+                p1.insert(-ele);
+            }
+        }
+    }
+           
+          long long findMedian( multiset<long long>&p1,multiset<long long>&p2){
+              
+              if(p1.size()==0){
+                  return (*p2.begin());
+              }
+              else if(p2.size()==0){
+                  int x=(*p1.begin());
+                  return -x;
+              }
+              
+              else if(p1.size()>p2.size()){
+                  int x=(*p1.begin());
+                  return -x;
+              }
+              else if(p2.size()>p1.size()){
+                   return (*p2.begin());
+              }
+              else{
+                  // same size 
+                  return (*p2.begin());
+              }
+              
+          }
+    
+    
+
+    
+    void precomputeMedian(vector<long long>&pr,vector<int>&nums,long long x){
+  
+        multiset<long long>p1;
+        multiset<long long>p2;
+        long long sum1=0;
+        long long sum2=0;
+        
+        int n=nums.size();
+        
+        
+        for(int i=0;i<=x-2;i++){
+            add(p1,p2,sum1,sum2,nums[i]);
+        }
+        
+        int i=0;
+        int j=x-1;
+        
+        while(j<n){
+            
+            // add current element 
+            add(p1,p2,sum1,sum2,nums[j]);
+           
+            
+          
+            long long median=findMedian(p1,p2);
+        
+            long long tcost1=(p1.size()*(1ll)*median)-sum1;
+            long long tcost2=sum2-(p2.size()*(1ll)*median);
+            
+            
+            pr[i]=tcost1+tcost2;
+            j++;
+            
+            remove(p1,p2,sum1,sum2,nums[i]);
+            i++;
+
+        }
+            
+        
+    }
+    
+    
+    
+    
+    long long minOperations(vector<int>& nums, int x, int k) {
+        
+        
+        int n=nums.size();
+        vector<long long>pr(n,0ll);
+        
+       precomputeMedian(pr,nums,x);
+        
+        
+        long long dp[n+1][k+1];
+        memset(dp,0ll,sizeof(dp));
+        
+        dp[n][0]=0;
+        for(int i=1;i<=k;i++){
+            dp[n][i]=INF;
+        }
+        
+
+        for(int i=n-1;i>=0;i--){
+            dp[i][0]=0ll;
+            for(int j=1;j<=k;j++){
+                long long ntake=dp[i+1][j];
+                long long take=INF;
+                if((i+x)<=n){
+                    take=pr[i]+dp[i+x][j-1];
+                }
+                
+                dp[i][j]=min(take,ntake);
+            }
+        }
+        
+     
+        
+        return  dp[0][k];
+        
+        
+    }
+};
+
+
