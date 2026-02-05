@@ -1,0 +1,33 @@
+#include <iostream>
+#include <map>
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+
+const int mod = 1e9 + 7;
+
+int disarrange(int n)
+{
+
+    // Create a DP array to store results
+    vector<int> dp(n + 1, 0);
+
+    // Base cases
+    dp[1] = 0;
+    dp[2] = 1;
+
+    // Fill the DP array using the recursive relation
+    for (int i = 3; i <= n; i++)
+    {
+        dp[i] = (i - 1) % mod * (1ll) * (dp[i - 1] % mod + dp[i - 2] % mod) % mod;
+    }
+
+    return dp[n];
+}
+
+int main()
+{
+    int n;
+    cin >> n;
+    cout << disarrange(n) % mod << endl;
+}
